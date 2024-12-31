@@ -1,0 +1,383 @@
+/*Importing Google Fonts*/
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+/* General reset for all elements */
+* {
+    margin: 0; /* Remove default margin */
+    padding: 0; /* Remove default padding */
+    box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
+    font-family: "Poppins", sans-serif; /* Set default font to Poppins */
+}
+
+/* Define custom CSS variables for dark mode */
+:root {
+    --text-color:#828282;
+    --subheading-color:#A0A0A0;
+    --placeholder-color:#6C6C6C;
+    --primary-color:#FFF;
+    --secondary-color:#E9EEF6;
+    --secondary-hover-color:#DBE1EA;
+}
+
+
+/* Style for the body element */
+body {
+    background: var(--primary-color); /* Set body background color */
+}
+
+/**************************************************************************************/
+
+.header {
+    margin-top:7vh;
+    padding:1rem;
+}
+
+/* make the typing area and header a lighter color */
+.header, .typing-area { 
+    color: var(--text-color);  
+}
+
+/* Restricts width and centers the header, message, and typing form */
+.header, .chat-list .message, .typing-form {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* Hides the header when the 'hide-header' class is applied to the body */
+body.hide-header .header{
+    display: none;
+    margin-top:0;
+}
+
+
+/* Style for elements with the class title and subtitle within the header */
+.header :where(.title, .subtitle) {
+    font-weight: 500;
+    line-height: 3.6rem;
+
+}
+
+/* Specific style for the title class within the header */
+.header .title {
+    font-size: 2.7rem;
+    width: fit-content;
+    background-clip: text;
+    background: linear-gradient(to right, #4285f4, #d96570); 
+   -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Specific style for the subtitle class within the header */
+.header .subtitle {
+    font-size: 2rem;
+    color: var(--subheading-color);
+}
+
+
+.suggestion-list {
+    margin-top: 9.5vh;
+    list-style: none;
+    display: flex;
+    gap: 1.25rem;
+    overflow-x:auto;  /* Enable horizontal scrolling if needed */
+    scrollbar-width: none; /* Hide the scrollbar*/
+}
+
+/* Style for each suggestion item within the suggestion-list */
+.suggestion-list .suggestion{
+    padding:1.25rem;
+    cursor:pointer;
+    width: 227px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+    border-radius:0.75rem;
+    background: var(--secondary-color);
+}
+
+.suggestion-list .suggestion:hover{
+    background: var(--secondary-hover-color);   /* Change background color on hover */
+
+}
+
+/* Style for the text inside each suggestion item */
+.suggestion-list .suggestion .text{
+    font-weight:400;
+}
+
+/* Style for icons in each suggestion item */
+.suggestion-list .suggestion .icon{
+    height: 42px;
+    width: 42px;
+    font-size: 1.3rem;
+    margin-top:2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content:center;
+    border-radius:50%;
+    background: var(--primary-color);
+}
+
+/**************************************************************************************/
+
+
+.chat-list{
+    padding: 2rem 1rem 12rem;
+    max-height: 100vh;
+    overflow-y: auto;   /* Enable vertical scrolling if content exceeds height */
+    scrollbar-color: #999 transparent; /* Custom scrollbar color*/
+}
+
+.chat-list .message.incoming{
+    margin-top: 1.5rem;  /* Margin above each incoming message */
+}
+
+.chat-list .message.outgoing {
+    justify-content: flex-end;  /* Align messages to the right */
+    text-align: right;  /* Ensure text is aligned to the right */
+}
+
+.chat-list .message.outgoing .message-content {
+    flex-direction: row-reverse;  /* Reverse the order of the image and message content */
+}
+
+.chat-list .message .message-content{
+    display:flex;
+    gap:1.5rem;  /*gap from the image to messagr */
+    width: 100%;
+    align-items: center;
+}
+
+.chat-list .message .avatar {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;  /* Ensure the image covers the element */
+    border-radius: 50%;  /* Make the avatar circular */
+    align-self:flex-start; /* Align avatar to the start of the container */
+}
+
+.chat-list .message .text,
+.chat-list .message .loading-text {
+    color: var(--text-color);
+}
+
+.chat-list .message .text.error{
+    color:red;
+}
+
+/* Animation for avatar in loading messages */
+.chat-list .message.loading .avatar{
+    animation: rotate 3s linear infinite;
+}
+
+/* Keyframes for the rotate animation */
+@keyframes rotate {
+    100%{
+        transform: rotate(350deg);
+    }
+}
+
+/* Hide text in loading messages */
+.chat-list .message.loading .text{
+    display:none;
+}
+
+.chat-list .message.loading .loading-text {
+    display: block;
+}
+
+
+/* Style for the copy icon within each message */
+.chat-list .message .icon{
+    height: 35px;
+    width: 35px;
+    display:flex;
+    cursor: pointer; /* Change cursor to pointer on hover */
+    font-size: 1.25rem;
+    margin-left: 3.5rem;
+    align-items:center;
+    justify-content: center; /* Center items horizontally */
+    border-radius: 50%;
+    background: var (--secondary-color);
+    color: var(--text-color);
+    visibility: hidden; /* Initially hide the icon */
+}
+
+/* Show the icon on hover for non-loading messages */
+.chat-list .message:not(.loading):hover .icon:not(.hide){
+    visibility: visible;
+}
+
+
+.chat-list .message .icon:hover{
+    background: var(--secondary-color);
+}
+
+/**************************************************************************************/
+
+
+.typing-area {
+    position:fixed;
+    width: 100%;
+    bottom: 0;
+    padding: 1rem;
+    background: var(--primary-color);
+}
+
+/* Style for elements with the classes typing-form and action-buttons within the typing area */
+.typing-area :where(.typing-form, .action-buttons) {
+   display:flex;
+   gap:0.75rem;
+}
+
+
+.typing-area .input-wrapper {
+    height: 56px;
+    width: 100%;
+    display: flex;
+    position: relative;
+}
+
+.typing-area .typing-input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    color: var(--text-color);
+    border-radius: 6.2rem;
+    padding: 1.1rem 4rem 1.1rem 1.5rem;
+    background: var(--secondary-color);
+}
+
+.typing-area .typing-input:focus {
+    background: var(--secondary-hover-color);   /* Change background color on focus */
+}
+
+/* Style for the placeholder text within the typing input */
+.typing-area .typing-input::placeholder{
+    color: var(--placeholder-color);
+}
+
+/* Style for the icon within the typing are, the delete button */
+.typing-area .icon {
+    height: 56px;
+    width: 56px;
+    cursor: pointer;
+    display:flex;
+    align-items: center; /* Center items vertically */
+    justify-content: center; /* Center items horizontally */
+    border-radius: 50%;
+    background: var(--secondary-color);
+
+}
+
+.typing-area .icon:hover {
+    background: var(--secondary-hover-color)!important;   /* Change background color on hover */
+
+}
+
+/* style for the send icon  */
+.typing-area .input-wrapper .icon{
+    position: absolute;
+    right: 0;
+    outline:none;
+    border:none;
+    background: none;
+    color: var(--text-color);
+    transform: scale(0);
+    transition: transforms 0.2s ease;
+}
+
+/* Show the icon when the typing input is valid */
+.typing-area .input-wrapper .typing-input:valid~.icon{
+    transform: scale(1);
+}
+
+.typing-area .disclaimer-text{
+    font-size: 0.85rem;
+    margin-top: 1rem;
+    text-align:center;
+    color: var(--placeholder-color);
+}
+
+/**************************************************************************************/
+.audio-text-player{
+    flex-direction: column; /* Stack elements vertically */
+    display:flex;
+    width: 100%;
+    position: relative;
+    
+}
+
+
+
+#audioPlayer {
+    /* position: absolute; */
+    margin-top: 20px;
+    margin-left: -10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;     /*make them centered vertically*/
+    gap: 15px;  /*put a space between each element*/
+    padding: 10px; /*padding around all the elements*/
+    border: 0px solid #ccc;    /* border around the div */     
+    border-radius: 8px;   
+    background-color:  var(--primary-color);
+    width: 60%;
+    justify-content: center;
+}
+
+ #playAudio {
+    padding: 10px 15px; /*padding around play/pause button*/
+    font-size: 15px;  /*size of the play pause button*/
+    cursor: pointer; /*make the cursor a pointer when hovered over*/
+    border: 2px solid black;
+    border-radius: 30px; /*mzke it a circle*/
+    background-color: none;
+    color: black;
+    width: 50px; /* Fixed width for consistent size */
+    transition: background-color 0.3s ease;
+}
+
+#playAudio:hover {
+    background-color: #ddd;
+}
+
+#downloadButton {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+#downloadButton:hover {
+    transform: scale(1.1);
+}
+
+progress {
+    width: 100%;
+    height: 10px;
+    margin-top: 10px;
+    appearance: none;
+}
+
+progress::-webkit-progress-bar {
+    background-color: #ddd;
+    border-radius: 5px;
+}
+
+progress::-webkit-progress-value {
+    background-color: black;
+    border-radius: 5px;
+} 
+
+
+/**************************************************************************************/
+/* he added extra css for phone support */
+/* https://www.youtube.com/watch?v=31dmameWOR8&ab_channel=CodingNepal */
+
+
+
