@@ -2,6 +2,7 @@ const typingForm = document.querySelector('.typing-form');
 const chatList = document.querySelector('.chat-list');  
 const deleteChatButton =  document.querySelector('#delet-chat-button');
 let isResponseGenerating = false;
+const BASE_URL = 'http://localhost:3000';
 
 const API_KEY = 'AIzaSyA4dvL1UM-X2R5vPZC0FgoJuiMBcNSnr6M'
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
@@ -81,6 +82,7 @@ const showTypingEffect = (text, textElement) => {
             clearInterval(typingInterval); // Clear the interval to stop the typing effect
             isResponseGenerating = false; // The response is no longer generating
         }
+        chatList.scrollTo(0, chatList.scrollHeight);
     }, 75); // Interval set to 75 milliseconds for each word
 
 };
@@ -89,7 +91,7 @@ const fetchAndDisplayResponse = async (userMessage, responseDiv, appendText = ''
     const textElement = responseDiv.querySelector('.text');
     try {
         //need to be sending the all the messages to the api here 
-        const apiResponse = await fetchFromBackend(`http://localhost:3000/${endpoint}`, allMessages );
+        const apiResponse =  await fetchFromBackend(`${BASE_URL}/${endpoint}`, allMessages);
         const fullResponse = apiResponse.completion + appendText;
         showTypingEffect(fullResponse, textElement);
         const newMessage = { role: 'assistant', content: fullResponse }; // Create a new message object
@@ -104,7 +106,7 @@ const fetchAndDisplayResponse = async (userMessage, responseDiv, appendText = ''
 
 const fetchResponse = async (endpoint) => {
     try {
-        const apiResponse = await fetchFromBackend(`http://localhost:3000/${endpoint}`, allMessages);
+        const apiResponse =  await fetchFromBackend(`${BASE_URL}/${endpoint}`, allMessages);
         return apiResponse.completion;
     } catch (error) {
         throw new Error("Failed to fech gpt completion");
@@ -131,8 +133,6 @@ const handleFormSubmission = async (appendText, endpoint) => {
     createInputDiv(userMessage);   //create a div for the user input 
     const responseDiv = createResponseDiv();  // create the response div, which contains a load animation
     fetchAndDisplayResponse(userMessage, responseDiv, appendText, endpoint) //need to pass through the 
-
-    chatList.scrollTo(0, chatList.scrollHeight); //scroll to the bottom
 
 }
 
@@ -163,7 +163,7 @@ const createResponseDiv2 = () => {
 async function fetchGeneratedAudio(allMessages) {
   console.log("Started fetching audio...");
   try {
-      const response = await fetch("http://localhost:3000/hypnosisAudio", {
+      const response = await fetch(`${BASE_URL}/hypnosisAudio`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -282,6 +282,8 @@ async function setupAudioPlayback(loadingText) {
         setupPlayPauseButton(audioElement);
         setupProgressBar(audioElement);
         setupDownloadButton(audioUrl);
+
+        chatList.scrollTo(0, chatList.scrollHeight);
         
   } catch (error) {
     console.error("Error setting up audio playback:", error);
@@ -307,6 +309,8 @@ console.log(allMessages);
 typingForm.addEventListener('submit', async (e) => {     
     e.preventDefault(); 
     questionCounter++;
+
+
     if (questionCounter < questions.length ) {
         await handleFormSubmission(questions[questionCounter], 'complexreflection');  //I want this to complete first   
     } else if (questionCounter  === questions.length) {
@@ -318,8 +322,10 @@ typingForm.addEventListener('submit', async (e) => {
         //append this response into the audio playback thing
         setupAudioPlayback(responsegpt);
         //await handleFormSubmission(' ','hypnosisscript');
-        chatList.scrollTo(0, chatList.scrollHeight);
     }   
+    
+     
+    
 });
 
 
@@ -329,8 +335,7 @@ typingForm.addEventListener('submit', async (e) => {
 
 // Add a click event listener to the delete chat button
 deleteChatButton.addEventListener('click', () => {
-        localStorage.removeItem("savedChats");
-        loadLocalstorageData(); // Reload the local storage data to update the UI
+        location.reload();
         displayRespone(questions[0], createResponseDiv()); 
 });
 
